@@ -1,3 +1,13 @@
+### Descrição
+Este projeto foi feito em Java 17 com Spring Boot, banco mongodb, postgresql, redis e autenticação em memória JWT com usuários fakes em memória.
+Temos um Sistema A que pode ter permissão de cadastrar um pedido com sua lista de produtos para um endpoint. Neste ponto grava no postgresql e no mongodb
+Temos outro usuário Sistema B que pode consultar um pedido, neste momento a consulta é feita inicialmente no mongo db e realizada um cache no redis para futuras consultas.
+Desta forma, o sistema pode ter duas estratégias um para cadastro e outro para consulta.
+Os bancos de dados podem ser rodados usando o docker-compose-db.
+
+Uma outra estruta baseada em microserviços, envolvendo Serviço de descoberta de serviços como Eureka, Gateway como balanceador de carga e docker-compose com replicar para 2 serviços, sendo um serviço para cadastro e outro para consulta, estava sendo implementado,
+mas devido problemas de rede, impactactam na conclusão desta abordagem em relação ao tempo para disponibilizar uma solução.
+
 ### Comandos para rodar o dockercompose para os bancos
 docker-compose -f docker-compose-db.yml up -d
 
