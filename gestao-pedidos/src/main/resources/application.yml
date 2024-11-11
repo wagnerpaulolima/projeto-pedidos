@@ -1,0 +1,36 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name=gestao-pedidos: gestao-pedidos
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pedidos
+    username: rootpostgress
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+
+  data:
+    mongodb:
+      uri: mongodb://rootmongo:1234@localhost:27017/pedidos
+
+  redis:
+    host: localhost
+    port: 6379
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret: "sua_chave_secreta"
+  expiration: 3600000 # tempo em milissegundos para expiração do token
+
