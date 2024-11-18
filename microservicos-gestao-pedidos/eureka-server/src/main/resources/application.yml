@@ -1,0 +1,19 @@
+server:
+  port: '8761'
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+
+spring:
+  application:
+    name: eureka-server
+  cloud:
+    inetutils:
+      ignored-interfaces: "docker0,veth.*" # Opcional, se houver interfaces Docker ou de rede virtual
+      preferred-networks: 127.0.0.1 # Opcional, para priorizar IPv4 em vez de IPv6

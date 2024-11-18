@@ -1,0 +1,48 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /pedido-service
+spring:
+  application:
+    name: pedido-service
+  cloud:
+    inetutils:
+      ignored-interfaces: "docker0,veth.*"
+      preferred-networks: 127.0.0.1
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pedidos
+    username: rootpostgress
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    mongodb:
+      #host: localhost
+      #port: 27017
+      #database: pedidos
+      #username: rootmongo
+      #password: 1234
+      #uri: mongodb://rootmongo:1234@localhost:27017/pedidos
+      uri: mongodb://rootmongo:1234@localhost:27017/pedidos?authSource=admin
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.springframework.data.mongodb: DEBUG
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true

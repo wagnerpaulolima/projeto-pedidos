@@ -1,0 +1,44 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api-gateway
+
+spring:
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: pedido-service
+          uri: lb://PEDIDO-SERVICE
+          predicates:
+            - Path=/api/pedido-service/pedidos/**
+          filters:
+            - StripPrefix=1
+        - id: consulta-pedido-service
+          uri: lb://CONSULTA-PEDIDO-SERVICE
+          predicates:
+            - Path=/api/consulta-pedido-service/consulta/**
+          filters:
+            - StripPrefix=1
+    inetutils:
+      ignored-interfaces: "docker0,veth.*" # Opcional, se houver interfaces Docker ou de rede virtual
+      preferred-networks: 127.0.0.1 # Opcional, para priorizar IPv4 em vez de IPv6
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+
+#logging:
+#  level:
+#    org.springframework: DEBUG
+#    org.springframework.security: DEBUG

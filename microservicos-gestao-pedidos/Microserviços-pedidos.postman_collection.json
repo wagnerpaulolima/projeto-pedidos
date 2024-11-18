@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "727a504e-59eb-476f-b7ab-8603bfe05078",
+		"name": "Microserviços-pedidos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1548760"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/auth/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"sistemaA\",\r\n    \"password\": \"1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/consulta-pedido-service/consulta/13",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaXN0ZW1hQSIsImlhdCI6MTczMTk2NDQ3OSwiZXhwIjoxNzMyMDUwODc5fQ.NRPaIUwne4E1aWuMCOswS_iA-CnK8ItyF2u0H__KcUy8zJ-ae-gdnlI4clneRj82moHCuYYitCdy1MXb9RefJw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"status\": \"PENDENTE\",\r\n  \"valorTotal\": 100.0,\r\n  \"produtos\": [\r\n    {\r\n      \"nome\": \"Produto A\",\r\n      \"preco\": 100.00,\r\n      \"quantidade\": 1\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/consulta-pedido-service/consulta/13",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"consulta-pedido-service",
+						"consulta",
+						"13"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/pedido-service/pedidos",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzaXN0ZW1hQSIsImlhdCI6MTczMTk2NDQ3OSwiZXhwIjoxNzMyMDUwODc5fQ.NRPaIUwne4E1aWuMCOswS_iA-CnK8ItyF2u0H__KcUy8zJ-ae-gdnlI4clneRj82moHCuYYitCdy1MXb9RefJw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"status\": \"PENDENTE\",\r\n  \"valorTotal\": 100.0,\r\n  \"produtos\": [\r\n    {\r\n      \"nome\": \"Produto A\",\r\n      \"preco\": 100.00,\r\n      \"quantidade\": 1\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/pedido-service/pedidos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pedido-service",
+						"pedidos"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
