@@ -1,3 +1,9 @@
+### Pasta microservicos-gestao-pedidos
+Esta pasta, tem um projeto Eureka para registrar os serviços, tem um projeto api-gateway para servir de balanceador de carga dos serviços, 
+tem um projeto de pedido-service, para após se logar no apigatway, poder cadastrar um pedido com seus produtos, salvando no postgresql e no mongodb.
+Tem um projeto de consulta-pedido-service, para uma vez logado no apigatway, poder consultar um pedido, consultando no mongodb e colocando em cache redis
+para novas consultas futuras. 
+
 ### Descrição
 Este projeto foi feito em Java 17 com Spring Boot, banco mongodb, postgresql, redis e autenticação em memória JWT com usuários fakes em memória.
 Temos um Sistema A que pode ter permissão de cadastrar um pedido com sua lista de produtos para um endpoint. Neste ponto grava no postgresql e no mongodb
