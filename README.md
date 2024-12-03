@@ -4,7 +4,7 @@ tem um projeto de pedido-service, para após se logar no apigatway, poder cadast
 Tem um projeto de consulta-pedido-service, para uma vez logado no apigatway, poder consultar um pedido, consultando no mongodb e colocando em cache redis
 para novas consultas futuras. 
 
-### Descrição
+### PASTA gestao-pedidos
 Este projeto foi feito em Java 17 com Spring Boot, banco mongodb, postgresql, redis e autenticação em memória JWT com usuários fakes em memória.
 Temos um Sistema A que pode ter permissão de cadastrar um pedido com sua lista de produtos para um endpoint. Neste ponto grava no postgresql e no mongodb
 Temos outro usuário Sistema B que pode consultar um pedido, neste momento a consulta é feita inicialmente no mongo db e realizada um cache no redis para futuras consultas.
