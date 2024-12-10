@@ -72,5 +72,5 @@ curl --location "http://localhost:8080/api/consultar/12" ^
 
 ### Links vídeos do YOUTUBE 
 
-Links de vídeo sobre aplicação Java em container de docker na AWS com ECS+Fargate 
+Link de vídeo sobre aplicação Java em container de docker na AWS com ECS+Fargate 
 https://youtu.be/Prlw-ySKdXI
