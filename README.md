@@ -69,3 +69,8 @@ curl --location 'http://localhost:8080/api/cadastrar' ^
 curl --location "http://localhost:8080/api/consultar/12" ^
 --header "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzaXN0ZW1hQiIsInJvbGUiOiJSRUFEIiwiaWF0IjoxNzMxMzUwNTU3LCJleHAiOjE3MzEzODY1NTd9.bzJNgl8lqct1xWt4fwN6aAnuDBG2506S4t_Z4PiYcgU" ^
 --header "Cookie: JSESSIONID=CB3649F66051540C61A5A8B01438CF38"
+
+### Links vídeos do YOUTUBE 
+
+Links de vídeo sobre aplicação Java em container de docker na AWS com ECS+Fargate 
+https://youtu.be/Prlw-ySKdXI
