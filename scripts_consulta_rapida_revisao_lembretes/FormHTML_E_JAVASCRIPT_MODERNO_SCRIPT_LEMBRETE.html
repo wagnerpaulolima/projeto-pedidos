@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD de Funcionários com Endereço e Imagens</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        #previewFoto {
+            max-width: 100px;
+            max-height: 100px;
+            margin-top: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>CRUD de Funcionários</h1>
+    <form id="formFuncionario" enctype="multipart/form-data">
+        <label>Nome Completo:
+            <input type="text" id="nome" required maxlength="100" pattern="^[a-zA-Z\s]+$" title="Somente letras e espaços. Máximo 100 caracteres.">
+        </label><br>
+
+        <label>Login:
+            <input type="text" id="login" required maxlength="50" pattern="^[a-zA-Z0-9_.-]+$" title="Somente letras, números, underline, ponto e hífen.">
+        </label><br>
+
+        <label>Email:
+            <input type="email" id="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Informe um email válido. Exemplo: exemplo@dominio.com">
+        </label><br>
+
+        <label>Senha:
+            <input type="password" id="senha" required minlength="8" 
+                   pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" 
+                   title="A senha deve ter pelo menos 8 caracteres, incluindo uma letra maiúscula, uma minúscula, um número e um caractere especial.">
+        </label><br>
+
+        <label>Data de Nascimento:
+            <input type="date" id="dataNascimento" required>
+        </label><br>
+
+        <label>Sexo:
+            <input type="radio" name="sexo" value="Masculino" required> Masculino
+            <input type="radio" name="sexo" value="Feminino"> Feminino
+        </label><br>
+
+        <label>Idiomas:
+            <input type="checkbox" id="idiomaIngles" value="Inglês"> Inglês
+            <input type="checkbox" id="idiomaPortugues" value="Português"> Português
+            <input type="checkbox" id="idiomaEspanhol" value="Espanhol"> Espanhol
+        </label><br>
+
+        <label>Estado:
+            <select id="estado" required>
+                <option value="">Selecione</option>
+                <option value="RJ">RJ - Rio de Janeiro</option>
+                <option value="SP">SP - São Paulo</option>
+            </select>
+        </label><br>
+
+        <label>CEP:
+            <input type="text" id="cep" maxlength="9" required pattern="\d{5}-\d{3}" title="Formato: 00000-000">
+        </label><br>
+
+        <label>Endereço:
+            <input type="text" id="logradouro" readonly>
+        </label><br>
+
+        <label>Bairro:
+            <input type="text" id="bairro" readonly>
+        </label><br>
+
+        <label>Cidade:
+            <input type="text" id="localidade" readonly>
+        </label><br>
+
+        <label>UF:
+            <input type="text" id="uf" readonly>
+        </label><br>
+
+        <label>Foto do Funcionário:
+            <input type="file" id="foto" accept="image/*" required>
+        </label><br>
+        <img id="previewFoto" alt="Preview da Foto" class="hidden"><br>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <h2>Lista de Funcionários</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Login</th>
+                <th>Email</th>
+                <th>Data de Nascimento</th>
+                <th>Sexo</th>
+                <th>Idiomas</th>
+                <th>Estado</th>
+                <th>CEP</th>
+                <th>Endereço</th>
+                <th>Foto</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="listaFuncionarios">
+            <!-- Dados preenchidos dinamicamente -->
+        </tbody>
+    </table>
+
+    <script>
+        // Classe Endereço
+        class Endereco {
+            constructor(cep, logradouro, bairro, localidade, uf) {
+                this.cep = cep;
+                this.logradouro = logradouro;
+                this.bairro = bairro;
+                this.localidade = localidade;
+                this.uf = uf;
+            }
+        }
+
+        // Classe Pessoa
+        class Pessoa {
+            constructor(nome, login, email, dataNascimento, sexo, endereco) {
+                this.nome = nome;
+                this.login = login;
+                this.email = email;
+                this.dataNascimento = dataNascimento;
+                this.sexo = sexo;
+                this.endereco = endereco;
+            }
+        }
+
+        // Classe Funcionario
+        class Funcionario extends Pessoa {
+            constructor(nome, login, email, dataNascimento, sexo, endereco, idiomas, estado, foto) {
+                super(nome, login, email, dataNascimento, sexo, endereco);
+                this.idiomas = idiomas;
+                this.estado = estado;
+                this.foto = foto;
+            }
+        }
+
+        const funcionarios = [];
+
+        async function buscarEndereco(cep) {
+            try {
+                const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+                const data = await response.json();
+                if (data.erro) throw new Error("CEP inválido");
+                return new Endereco(data.cep, data.logradouro, data.bairro, data.localidade, data.uf);
+            } catch (error) {
+                alert("Erro ao buscar o CEP. Verifique se o CEP está correto.");
+                return null;
+            }
+        }
+
+        async function preencherEndereco(cep) {
+            const endereco = await buscarEndereco(cep);
+            if (endereco) {
+                document.getElementById('logradouro').value = endereco.logradouro || "";
+                document.getElementById('bairro').value = endereco.bairro || "";
+                document.getElementById('localidade').value = endereco.localidade || "";
+                document.getElementById('uf').value = endereco.uf || "";
+            }
+        }
+
+        document.getElementById('cep').addEventListener('blur', function() {
+            const cep = this.value.replace(/\D/g, '');
+            if (cep.length === 8) {
+                preencherEndereco(cep);
+            }
+        });
+
+        async function enviarDadosFuncionario(funcionario) {
+            try {
+                const response = await fetch('https://api.fake.com/funcionarios', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(funcionario),
+                });
+                const resultado = await response.json();
+                console.log('Resposta da API:', resultado);
+
+                // Retorna a foto enviada pela API (url ou base64)
+                if (resultado.foto) {
+                    return resultado.foto;
+                }
+            } catch (error) {
+                console.error('Erro ao enviar dados:', error);
+            }
+        }
+
+        function exibirImagem(foto, elementoImg) {
+            if (foto.startsWith('http') || foto.startsWith('data:image')) {
+                elementoImg.src = foto;
+            } else {
+                elementoImg.src = `data:image/png;base64,${foto}`;
+            }
+            elementoImg.classList.remove('hidden');
+        }
+
+        document.getElementById('foto').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('previewFoto');
+                    exibirImagem(e.target.result, preview);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function obterIdiomas() {
+            const idiomas = [];
+            if (document.getElementById('idiomaIngles').checked) idiomas.push("Inglês");
+            if (document.getElementById('idiomaPortugues').checked) idiomas.push("Português");
+            if (document.getElementById('idiomaEspanhol').checked) idiomas.push("Espanhol");
+            return idiomas;
+        }
+
+        document.getElementById('formFuncionario').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            if (!this.checkValidity()) {
+                alert("Preencha todos os campos corretamente.");
+                return;
+            }
+
+            const nome = document.getElementById('nome').value;
+            const login = document.getElementById('login').value;
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value; // Apenas coletada, não exibida
+            const dataNascimento = document.getElementById('dataNascimento').value;
+            const sexo = document.querySelector('input[name="sexo"]:checked').value;
+            const idiomas = obterIdiomas();
+            const estado = document.getElementById('estado').value;
+            const foto = document.getElementById('previewFoto').src;
+            const endereco = new Endereco(
+                document.getElementById('cep').value,
+                document.getElementById('logradouro').value,
+                document.getElementById('bairro').value,
+                document.getElementById('localidade').value,
+                document.getElementById('uf').value
+            );
+
+            const funcionario = new Funcionario(nome, login, email, dataNascimento, sexo, endereco, idiomas, estado, foto);
+            funcionarios.push(funcionario);
+
+            const fotoEnviada = await enviarDadosFuncionario(funcionario);
+            if (fotoEnviada) {
+                funcionario.foto = fotoEnviada;
+            }
+
+            atualizarTabela();
+            this.reset();
+            document.getElementById('previewFoto').classList.add('hidden');
+        });
+
+        function atualizarTabela() {
+            const tbody = document.getElementById('listaFuncionarios');
+            tbody.innerHTML = "";
+            funcionarios.forEach((funcionario, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${funcionario.nome}</td>
+                    <td>${funcionario.login}</td>
+                    <td>${funcionario.email}</td>
+                    <td>${funcionario.dataNascimento}</td>
+                    <td>${funcionario.sexo}</td>
+                    <td>${funcionario.idiomas.join(", ")}</td>
+                    <td>${funcionario.estado}</td>
+                    <td>${funcionario.endereco.cep}</td>
+                    <td>${funcionario.endereco.logradouro}, ${funcionario.endereco.bairro}, ${funcionario.endereco.localidade} - ${funcionario.endereco.uf}</td>
+                    <td><img id="img${index}" alt="Foto" style="max-width: 50px; max-height: 50px;"></td>
+                    <td><button onclick="editarFuncionario(${index})">Editar</button></td>
+                `;
+                tbody.appendChild(tr);
+                const imgElement = document.getElementById(`img${index}`);
+                exibirImagem(funcionario.foto, imgElement);
+            });
+        }
+
+        function editarFuncionario(index) {
+            const funcionario = funcionarios[index];
+            document.getElementById('nome').value = funcionario.nome;
+            document.getElementById('login').value = funcionario.login;
+            document.getElementById('email').value = funcionario.email;
+            document.getElementById('dataNascimento').value = funcionario.dataNascimento;
+            document.querySelector(`input[name="sexo"][value="${funcionario.sexo}"]`).checked = true;
+            document.getElementById('idiomaIngles').checked = funcionario.idiomas.includes("Inglês");
+            document.getElementById('idiomaPortugues').checked = funcionario.idiomas.includes("Português");
+            document.getElementById('idiomaEspanhol').checked = funcionario.idiomas.includes("Espanhol");
+            document.getElementById('estado').value = funcionario.estado;
+            document.getElementById('cep').value = funcionario.endereco.cep;
+            document.getElementById('logradouro').value = funcionario.endereco.logradouro;
+            document.getElementById('bairro').value = funcionario.endereco.bairro;
+            document.getElementById('localidade').value = funcionario.endereco.localidade;
+            document.getElementById('uf').value = funcionario.endereco.uf;
+            const preview = document.getElementById('previewFoto');
+            exibirImagem(funcionario.foto, preview);
+        }
+    </script>
+</body>
+</html>
