@@ -1,3 +1,4 @@
+z
 ### Pasta microservicos-gestao-pedidos
 Esta pasta, tem um projeto Eureka para registrar os serviços, tem um projeto api-gateway para servir de balanceador de carga dos serviços, 
 tem um projeto de pedido-service, para após se logar no apigatway, poder cadastrar um pedido com seus produtos, salvando no postgresql e no mongodb.
